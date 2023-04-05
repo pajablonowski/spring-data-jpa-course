@@ -29,17 +29,22 @@ public class SpringBootCourseApplication {
                     "Gonzalez",
                     "mariagonzalez@gmail.com",
                     33);
-            Student paul = new Student(
+            Student paul1 = new Student(
                     "Paul",
                     "Lopez",
                     "paulLopez@gmail.com",
                     45);
+            Student paul2 = new Student(
+                    "Paul",
+                    "Llonck",
+                    "paulllonck@gmail.com",
+                    43);
             Student akiva = new Student(
                     "Akiva",
                     "Shtisel",
                     "aliva.shtisel@gmail.com",
                     31);
-            studentRepository.saveAll(List.of(maria, paul, akiva));
+            studentRepository.saveAll(List.of(maria, paul1, akiva, paul2));
             System.out.println(studentRepository.count());
             studentRepository
                     .findById(4L)
