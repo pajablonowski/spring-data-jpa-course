@@ -1,8 +1,7 @@
-package com.amigos;
+package com.amigos.model;
 
 
 import jakarta.persistence.*;
-import org.springframework.lang.NonNull;
 
 
 import java.util.Objects;
@@ -58,13 +57,11 @@ public class Student {
 
     public Student
             (
-            Long id,
             String firstName,
             String lastName,
             String email,
             Integer age
             ) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
