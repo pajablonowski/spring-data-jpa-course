@@ -2,6 +2,10 @@ package com.amigos.services;
 
 import com.amigos.model.Student;
 import com.amigos.repositories.StudentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +23,30 @@ public class StudentService {
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+
+    public List<Student> getAllStudentsAndSortByFirstName() {
+        return studentRepository.findAll(Sort.by(Sort.Direction.ASC, "firstName"));
+    }
+
+    public List<Student> getAllStudentsAndSortByLastName() {
+        return studentRepository.findAll(Sort.by(Sort.Direction.ASC, "lastName"));
+    }
+
+    public List<Student> getAllStudentsAndSortByLastNameAndFirstName() {
+        return studentRepository
+                .findAll(Sort.by("lastName").ascending()
+                        .and(Sort.by("firstName").ascending()));
+    }
+
+    public Page<Student> getAllStudentsPaginated(){
+        PageRequest pageRequest = PageRequest.of(
+                0,
+                5,
+                Sort.by("firstName").ascending());
+        Page<Student> page = studentRepository.findAll(pageRequest);
+        return page;
+    }
+
 
     public Optional<Student> findByEmail(String email) {
         return studentRepository.findByEmail(email);
