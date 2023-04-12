@@ -25,7 +25,35 @@ public class StudentService {
     }
 
     public List<Student> findStudent(String firstName, Integer age){
-        return studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThan(firstName, age);
+        return studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(firstName, age);
+    }
+
+    public Optional<Student> findByEmailJPQL(String email){
+        return studentRepository.findByEmailJPQL(email);
+    }
+
+    public List<Student> findStudentJPQL(String firstName, Integer age){
+        return studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualJPQL(firstName, age);
+    }
+
+    public Optional<Student> findByEmailNativeQuerry(String email){
+        return studentRepository.findByEmailNativeQuerry(email);
+    }
+
+    public List<Student> findStudentNativeQuerry(String firstName, Integer age){
+        return studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualNativeQuerry(firstName, age);
+    }
+
+    public Optional<Student> findByEmailNativeQuerryNamerParameter(String email){
+        return studentRepository.findByEmailNativeQuerryNamedParameter(email);
+    }
+
+    public List<Student> findStudentNativeQuerryNamerParameter(String firstName, Integer age){
+        return studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualNativeQuerryNamedParameter(firstName, age);
+    }
+
+    public int deleteStudent(Long id){
+        return studentRepository.deleteStudentById(id);
     }
 
 }

@@ -44,7 +44,12 @@ public class SpringBootCourseApplication {
                     "Shtisel",
                     "aliva.shtisel@gmail.com",
                     31);
-            studentRepository.saveAll(List.of(maria, paul1, akiva, paul2));
+            Student recordToDelete = new Student(
+                    "XX",
+                    "XXXX",
+                    "xx.xxxx@gmail.com",
+                    99);
+            studentRepository.saveAll(List.of(maria, paul1, akiva, paul2,recordToDelete));
             System.out.println(studentRepository.count());
             studentRepository
                     .findById(4L)
@@ -52,8 +57,10 @@ public class SpringBootCourseApplication {
                             System.out::println,
                             () -> System.out.println("Student with ID 4 does not exist"));
 
+
+            System.out.println("Deleting record to delete");
+            System.out.println(studentRepository.deleteStudentById(5L));
+
         };
-
-
     }
 }
