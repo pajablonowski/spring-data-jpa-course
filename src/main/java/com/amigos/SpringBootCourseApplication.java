@@ -1,6 +1,8 @@
 package com.amigos;
 
 import com.amigos.model.Student;
+import com.amigos.model.StudentIdCard;
+import com.amigos.repositories.StudentIdCardRepository;
 import com.amigos.repositories.StudentRepository;
 import com.amigos.services.StudentService;
 import com.github.javafaker.Faker;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -24,29 +27,36 @@ public class SpringBootCourseApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
+    CommandLineRunner commandLineRunner(StudentIdCardRepository studentIdCardRepository) {
         return args -> {
-            generateRandomStudents(studentRepository);
+            generateStudentIdCard(studentIdCardRepository);
         };
     }
 
-    private void generateRandomStudents(StudentRepository studentRepository){
+    private List<Student> generateRandomStudents(){
+        List<Student> studentList = new ArrayList<>();
         Faker faker = new Faker();
         for (int i = 0; i<20; i++){
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
             String email = String.format("%s.%s.gmail.com",firstName.toLowerCase(), lastName.toLowerCase());
-//                new StringBuilder()
-//                        .append(firstName.toLowerCase())
-//                        .append(".")
-//                        .append(lastName.toLowerCase())
-//                        .append("@gmail.com").toString();
             Student student = new Student(
                     firstName,
                     lastName,
                     email,
                     faker.number().numberBetween(17,55));
-            studentRepository.save(student);
+            studentList.add(student);
+        }
+        return studentList;
+    }
+
+    private void generateStudentIdCard(StudentIdCardRepository studentIdCardRepository){
+        List<Student> studentList = generateRandomStudents();
+        int counter = 0;
+        for (Student student : studentList) {
+            StudentIdCard studentIdCard = new StudentIdCard(student ,"CardId"+100+counter);
+            studentIdCardRepository.save(studentIdCard);
+            counter++;
         }
     }
 }
