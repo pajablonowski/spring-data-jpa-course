@@ -40,7 +40,9 @@ public class StudentController {
 
     @GetMapping("/3")
     public List<Student> findAllStudents() {
-        return studentService.getAllStudents();
+        List<Student> allStudents = studentService.getAllStudents();
+        System.out.println(allStudents.get(0));
+        return  allStudents;
     }
 
     @GetMapping("/4")
@@ -55,6 +57,7 @@ public class StudentController {
 
     @GetMapping("/5")
     public List<Student> findStudentsByFirstNameAndAgeJPQL() {
+
         return studentService.findStudentJPQL("Paul", 43);
     }
 

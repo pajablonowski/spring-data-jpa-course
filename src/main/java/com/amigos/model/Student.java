@@ -55,6 +55,12 @@ public class Student {
     )
     private Integer age;
 
+
+    @OneToOne(
+            mappedBy = "student",
+            orphanRemoval = true)
+    private StudentIdCard studentIdCard;
+
     public Student
             (
             String firstName,
@@ -111,6 +117,7 @@ public class Student {
         this.age = age;
     }
 
+
     @Override
     public String toString() {
         return "Student{" +
@@ -119,6 +126,7 @@ public class Student {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", age=" + age +
+                ", studentIdCard=" + studentIdCard +
                 '}';
     }
 
