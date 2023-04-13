@@ -27,9 +27,10 @@ public class SpringBootCourseApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentIdCardRepository studentIdCardRepository) {
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
         return args -> {
             generateStudentIdCard(studentIdCardRepository);
+           studentIdCardRepository.deleteById(1L);
         };
     }
 
@@ -58,5 +59,6 @@ public class SpringBootCourseApplication {
             studentIdCardRepository.save(studentIdCard);
             counter++;
         }
+
     }
 }

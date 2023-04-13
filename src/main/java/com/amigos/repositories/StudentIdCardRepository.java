@@ -7,4 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface StudentIdCardRepository
         extends JpaRepository<StudentIdCard, Long> {
+
+
 }
