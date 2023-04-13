@@ -29,33 +29,34 @@ public class SpringBootCourseApplication {
     @Bean
     CommandLineRunner commandLineRunner(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
         return args -> {
-            generateStudentIdCard(studentIdCardRepository);
-           studentIdCardRepository.deleteById(1L);
+            generateStudentIdCard(studentRepository,studentIdCardRepository);
+            studentIdCardRepository.deleteById(1L);
         };
     }
 
-    private List<Student> generateRandomStudents(){
+    private List<Student> generateRandomStudents() {
         List<Student> studentList = new ArrayList<>();
         Faker faker = new Faker();
-        for (int i = 0; i<20; i++){
+        for (int i = 0; i < 20; i++) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
-            String email = String.format("%s.%s.gmail.com",firstName.toLowerCase(), lastName.toLowerCase());
+            String email = String.format("%s.%s.gmail.com", firstName.toLowerCase(), lastName.toLowerCase());
             Student student = new Student(
                     firstName,
                     lastName,
                     email,
-                    faker.number().numberBetween(17,55));
+                    faker.number().numberBetween(17, 55));
             studentList.add(student);
         }
         return studentList;
     }
 
-    private void generateStudentIdCard(StudentIdCardRepository studentIdCardRepository){
+    private void generateStudentIdCard(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
         List<Student> studentList = generateRandomStudents();
         int counter = 0;
         for (Student student : studentList) {
-            StudentIdCard studentIdCard = new StudentIdCard(student ,"CardId"+100+counter);
+            studentRepository.save(student);
+            StudentIdCard studentIdCard = new StudentIdCard(student, "CardId" + 100 + counter);
             studentIdCardRepository.save(studentIdCard);
             counter++;
         }
