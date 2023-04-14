@@ -17,6 +17,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT s FROM Student s where s.email = ?1")
     Optional<Student> findByEmailJPQL(String email);
 
+    @Query("SELECT s FROM Student s JOIN FETCH s.books where s.id = ?1")
+    Optional<Student> findStudentById(Long id);
+
+    @Query("SELECT s FROM Student s JOIN FETCH s.books")
+    List<Student> findAllStudents();
+
     @Query("SELECT s from Student s WHERE s.firstName =?1 AND s.age>=?2")
     List<Student> findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualJPQL(
             String firstName,
@@ -52,6 +58,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Modifying
     @Query("DELETE FROM Student s WHERE s.id =?1")
     int deleteStudentById(Long id);
+
 
 
     List<Student> findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(
