@@ -1,19 +1,17 @@
 package com.amigos;
 
+import com.amigos.model.Book;
 import com.amigos.model.Student;
 import com.amigos.model.StudentIdCard;
-import com.amigos.repositories.StudentIdCardRepository;
 import com.amigos.repositories.StudentRepository;
-import com.amigos.services.StudentService;
 import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,39 +25,58 @@ public class SpringBootCourseApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
         return args -> {
-            generateStudentIdCard(studentRepository,studentIdCardRepository);
-            studentIdCardRepository.deleteById(1L);
+            generateRandomStudents(studentRepository);
+//            studentIdCardRepository.deleteById(1L);
+
+
         };
     }
 
-    private List<Student> generateRandomStudents() {
-        List<Student> studentList = new ArrayList<>();
+    void generateRandomStudents(StudentRepository studentRepository) {
         Faker faker = new Faker();
-        for (int i = 0; i < 20; i++) {
+        List<Student> studentL = new ArrayList<>();
+        for (int x = 0; x < 10; x++) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
-            String email = String.format("%s.%s.gmail.com", firstName.toLowerCase(), lastName.toLowerCase());
+            String email = String.format("%s.%s@amigoscode.edu", firstName, lastName);
             Student student = new Student(
                     firstName,
                     lastName,
                     email,
                     faker.number().numberBetween(17, 55));
-            studentList.add(student);
-        }
-        return studentList;
-    }
 
-    private void generateStudentIdCard(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository) {
-        List<Student> studentList = generateRandomStudents();
-        int counter = 0;
-        for (Student student : studentList) {
+            student.addBook(
+                    new Book("Clean Code", LocalDateTime.now().minusDays(4)));
+
+
+            student.addBook(
+                    new Book("Think and Grow Rich", LocalDateTime.now()));
+
+
+            student.addBook(
+                    new Book("Spring Data JPA", LocalDateTime.now().minusYears(1)));
+
+            StudentIdCard studentIdCard = new StudentIdCard(
+                    "IdCard" + x,
+                    student);
+
+            student.setStudentIdCard(studentIdCard);
+
             studentRepository.save(student);
-            StudentIdCard studentIdCard = new StudentIdCard(student, "CardId" + 100 + counter);
-            studentIdCardRepository.save(studentIdCard);
-            counter++;
+            studentL.add(student);
         }
 
+
+
+        studentRepository.findStudentById(1L).ifPresent(s -> {
+            System.out.println("fetch book lazy...");
+            List<Book> books = s.getBooks();
+            books.forEach(book -> {
+                System.out.println(
+                        s.getFirstName() + " borrowed " + book.getBookName());
+            });
+        });
     }
 }
