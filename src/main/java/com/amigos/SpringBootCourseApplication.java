@@ -1,6 +1,7 @@
 package com.amigos;
 
 import com.amigos.model.Book;
+import com.amigos.model.Course;
 import com.amigos.model.Student;
 import com.amigos.model.StudentIdCard;
 import com.amigos.repositories.StudentRepository;
@@ -37,37 +38,38 @@ public class SpringBootCourseApplication {
     void generateRandomStudents(StudentRepository studentRepository) {
         Faker faker = new Faker();
         List<Student> studentL = new ArrayList<>();
-        for (int x = 0; x < 10; x++) {
-            String firstName = faker.name().firstName();
-            String lastName = faker.name().lastName();
-            String email = String.format("%s.%s@amigoscode.edu", firstName, lastName);
-            Student student = new Student(
-                    firstName,
-                    lastName,
-                    email,
-                    faker.number().numberBetween(17, 55));
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+        String email = String.format("%s.%s@amigoscode.edu", firstName, lastName);
+        Student student = new Student(
+                firstName,
+                lastName,
+                email,
+                faker.number().numberBetween(17, 55));
 
-            student.addBook(
-                    new Book("Clean Code", LocalDateTime.now().minusDays(4)));
+        student.addBook(
+                new Book("Clean Code", LocalDateTime.now().minusDays(4)));
 
+        student.addBook(
+                new Book("Think and Grow Rich", LocalDateTime.now()));
 
-            student.addBook(
-                    new Book("Think and Grow Rich", LocalDateTime.now()));
+        student.addBook(
+                new Book("Spring Data JPA", LocalDateTime.now().minusYears(1)));
 
+        student.enrolToCourse(
+                new Course("Spring Data JPA", "IT"));
 
-            student.addBook(
-                    new Book("Spring Data JPA", LocalDateTime.now().minusYears(1)));
+        student.enrolToCourse(
+                new Course("Many to many relationships", "IT"));
 
-            StudentIdCard studentIdCard = new StudentIdCard(
-                    "IdCard" + x,
-                    student);
+        StudentIdCard studentIdCard = new StudentIdCard(
+                "IdCard",
+                student);
 
-            student.setStudentIdCard(studentIdCard);
+        student.setStudentIdCard(studentIdCard);
 
-            studentRepository.save(student);
-            studentL.add(student);
-        }
-
+        studentRepository.save(student);
+        studentL.add(student);
 
 
         studentRepository.findStudentById(1L).ifPresent(s -> {
