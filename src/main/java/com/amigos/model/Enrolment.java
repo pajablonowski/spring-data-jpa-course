@@ -2,6 +2,8 @@ package com.amigos.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity(name = "Enrloment")
 @Table(name = "enrolment")
 public class Enrolment {
@@ -13,7 +15,10 @@ public class Enrolment {
     @ManyToOne
     @MapsId("studentId")
     @JoinColumn(
-            name = "student_id"
+            name = "student_id",
+            foreignKey = @ForeignKey(
+                    name = "enrolment_student_id_fk"
+            )
     )
     private Student student;
 
@@ -21,13 +26,29 @@ public class Enrolment {
     @ManyToOne
     @MapsId("courseId")
     @JoinColumn(
-            name = "course_id"
+            name = "course_id",
+            foreignKey = @ForeignKey(
+                    name = "enrolment_course_id_fk"
+            )
     )
     private Course course;
 
-    public Enrolment(Student student, Course course) {
+    @Column(
+            name = "created_at",
+            nullable = false,
+            columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
+    )
+    private LocalDateTime createdAt;
+
+    public Enrolment(Course course) {
+        this.course = course;
+    }
+
+    public Enrolment(EnrolmentId id, Student student, Course course, LocalDateTime createdAt) {
+        this.id = id;
         this.student = student;
         this.course = course;
+        this.createdAt = createdAt;
     }
 
     public Enrolment() {
@@ -55,5 +76,13 @@ public class Enrolment {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

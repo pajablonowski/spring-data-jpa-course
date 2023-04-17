@@ -1,9 +1,6 @@
 package com.amigos;
 
-import com.amigos.model.Book;
-import com.amigos.model.Course;
-import com.amigos.model.Student;
-import com.amigos.model.StudentIdCard;
+import com.amigos.model.*;
 import com.amigos.repositories.StudentRepository;
 import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
@@ -56,11 +53,28 @@ public class SpringBootCourseApplication {
         student.addBook(
                 new Book("Spring Data JPA", LocalDateTime.now().minusYears(1)));
 
-        student.enrolToCourse(
-                new Course("Spring Data JPA", "IT"));
+        student.addEnrolment(
+                new Enrolment(
+                        new EnrolmentId(1L, 1L),
+                        student,
+                        new Course(
+                                "Spring Data JPA",
+                                "IT"
+                        ),
+                        LocalDateTime.now()
+                )
+        );
 
-        student.enrolToCourse(
-                new Course("Many to many relationships", "IT"));
+        student.addEnrolment(
+                new Enrolment(
+                        new EnrolmentId(1L, 2L),
+                        student,
+                        new Course(
+                                "Many to many relationships",
+                                "IT"),
+                        LocalDateTime.now().minusDays(17)
+                )
+        );
 
         StudentIdCard studentIdCard = new StudentIdCard(
                 "IdCard",
