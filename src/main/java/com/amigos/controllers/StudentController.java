@@ -1,6 +1,7 @@
 package com.amigos.controllers;
 
 import com.amigos.model.Student;
+import com.amigos.model.dto.StudentDTO;
 import com.amigos.repositories.StudentRepository;
 import com.amigos.services.StudentService;
 import org.springframework.context.annotation.Bean;
@@ -34,20 +35,19 @@ public class StudentController {
         return student.get();
     }
     @GetMapping("/2")
-    public List<Student> findStudentsByFirstNameAndAge() {
+    public List<StudentDTO> findStudentsByFirstNameAndAge() {
         return studentService.findStudent("Paul", 43);
     }
 
     @GetMapping("/3")
-    public List<Student> findAllStudents() {
-        List<Student> allStudents = studentService.getAllStudents();
-        System.out.println(allStudents.get(0));
+    public List<StudentDTO> findAllStudents() {
+        List<StudentDTO> allStudents = studentService.getAllStudents();
         return  allStudents;
     }
 
     @GetMapping("/4")
-    public Student findStudentsByEmailJPQL() {
-        Optional<Student> studentByEmailJPQL = studentService.findByEmailJPQL("mariagonzalez@gmail.com");
+    public StudentDTO findStudentsByEmailJPQL() {
+        Optional<StudentDTO> studentByEmailJPQL = studentService.findByEmailJPQL("mariagonzalez@gmail.com");
 
         if (studentByEmailJPQL.isEmpty()){
             throw new NoSuchElementException("Student with given email does not exist");
@@ -56,14 +56,13 @@ public class StudentController {
     }
 
     @GetMapping("/5")
-    public List<Student> findStudentsByFirstNameAndAgeJPQL() {
-
+    public List<StudentDTO> findStudentsByFirstNameAndAgeJPQL() {
         return studentService.findStudentJPQL("Paul", 43);
     }
 
     @GetMapping("/6")
-    public Student findStudentsByEmailNativeQuerry() {
-        Optional<Student> studentByEmailJPQL = studentService.findByEmailNativeQuerry("mariagonzalez@gmail.com");
+    public StudentDTO findStudentsByEmailNativeQuerry() {
+        Optional<StudentDTO> studentByEmailJPQL = studentService.findByEmailNativeQuerry("mariagonzalez@gmail.com");
 
         if (studentByEmailJPQL.isEmpty()){
             throw new NoSuchElementException("Student with given email does not exist");
@@ -72,13 +71,13 @@ public class StudentController {
     }
 
     @GetMapping("/7")
-    public List<Student> findStudentsByFirstNameAndAgeNativeQuerry() {
+    public List<StudentDTO> findStudentsByFirstNameAndAgeNativeQuerry() {
         return studentService.findStudentNativeQuerry("Paul", 43);
     }
 
     @GetMapping("/8")
-    public Student findStudentsByEmailNativeQuerryNamedParameter() {
-        Optional<Student> studentByEmailJPQL = studentService.findByEmailNativeQuerryNamerParameter("mariagonzalez@gmail.com");
+    public StudentDTO findStudentsByEmailNativeQuerryNamedParameter() {
+        Optional<StudentDTO> studentByEmailJPQL = studentService.findByEmailNativeQuerryNamerParameter("mariagonzalez@gmail.com");
 
         if (studentByEmailJPQL.isEmpty()){
             throw new NoSuchElementException("Student with given email does not exist");
@@ -87,26 +86,26 @@ public class StudentController {
     }
 
     @GetMapping("/9")
-    public List<Student> findStudentsByFirstNameAndAgeNativeQuerryNamedParameter() {
+    public List<StudentDTO> findStudentsByFirstNameAndAgeNativeQuerryNamedParameter() {
         return studentService.findStudentNativeQuerryNamerParameter("Paul", 43);
     }
 
     @GetMapping("/10")
-    public List<Student> findAllStudentsAndSortByFirtsName() {
+    public List<StudentDTO> findAllStudentsAndSortByFirtsName() {
         return studentService.getAllStudentsAndSortByFirstName();
     }
     @GetMapping("/11")
-    public List<Student> findAllStudentsAndSortByLastName() {
+    public List<StudentDTO> findAllStudentsAndSortByLastName() {
         return studentService.getAllStudentsAndSortByLastName();
     }
 
     @GetMapping("/12")
-    public List<Student> getAllStudentsAndSortByLastNameAndFirstName() {
+    public List<StudentDTO> getAllStudentsAndSortByLastNameAndFirstName() {
         return studentService.getAllStudentsAndSortByLastNameAndFirstName();
     }
 
     @GetMapping("/13")
-    public Page<Student> getAllStudentsPaginated() {
+    public List<StudentDTO> getAllStudentsPaginated() {
         return studentService.getAllStudentsPaginated();
     }
 }

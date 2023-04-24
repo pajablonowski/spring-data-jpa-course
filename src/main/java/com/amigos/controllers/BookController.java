@@ -1,6 +1,7 @@
 package com.amigos.controllers;
 
 import com.amigos.model.Book;
+import com.amigos.model.dto.BookDTO;
 import com.amigos.services.BookService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,12 @@ public class BookController {
     }
 
     @GetMapping("/1")
-    public List<Book> getAllBooks(){
+    public List<BookDTO> getAllBooks(){
         return bookService.getAllBooks();
+    }
+
+    @GetMapping("/2")
+    public List<BookDTO> getFindBookByName(){
+        return bookService.getFindBookByName("Clean Code");
     }
 }
