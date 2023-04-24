@@ -1,6 +1,7 @@
 package com.amigos.services;
 
 import com.amigos.model.Book;
+import com.amigos.model.dto.BookDTO;
 import com.amigos.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,12 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> getAllBooks(){
-        return bookRepository.findAll();
+    public List<BookDTO> getAllBooks(){
+        return DTOService.mapBookListIntoBookDTOList(bookRepository.findAll());
+    }
+
+    public List<BookDTO> getFindBookByName(String bookName){
+        return DTOService.mapBookListIntoBookDTOList(bookRepository.findBookByName(bookName));
     }
 
 

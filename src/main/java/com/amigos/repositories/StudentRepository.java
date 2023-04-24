@@ -59,8 +59,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("DELETE FROM Student s WHERE s.id =?1")
     int deleteStudentById(Long id);
 
-
-
     List<Student> findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(
             String firstName,
             Integer age);
