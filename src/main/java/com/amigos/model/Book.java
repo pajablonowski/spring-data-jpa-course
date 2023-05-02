@@ -59,6 +59,13 @@ public class Book {
         this.createdAt = createdAt;
         this.bookName = bookName;
     }
+    public Book(String bookName,
+                LocalDateTime createdAt,
+                Student student) {
+        this.createdAt = createdAt;
+        this.bookName = bookName;
+        this.student = student;
+    }
 
     public Long getId() {
         return id;

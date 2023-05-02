@@ -1,8 +1,11 @@
 package com.amigos;
 
 import com.amigos.model.*;
+import com.amigos.repositories.BookRepository;
+import com.amigos.repositories.StudentIdCardRepository;
 import com.amigos.repositories.StudentRepository;
 import com.github.javafaker.Faker;
+import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 @RestController
@@ -23,10 +27,14 @@ public class SpringBootCourseApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
+    CommandLineRunner commandLineRunner(
+                                    StudentRepository studentRepository,
+                                    StudentIdCardRepository studentIdCardRepository,
+                                    BookRepository bookRepository) {
         return args -> {
             generateRandomStudents(studentRepository);
-//            studentIdCardRepository.deleteById(1L);
+     //       deleteingProblem(studentRepository, studentIdCardRepository);
+            addingNewBook(studentRepository, bookRepository);
 
 
         };
@@ -85,7 +93,6 @@ public class SpringBootCourseApplication {
         studentRepository.save(student);
         studentL.add(student);
 
-
         studentRepository.findStudentById(1L).ifPresent(s -> {
             System.out.println("fetch book lazy...");
             List<Book> books = s.getBooks();
@@ -94,5 +101,31 @@ public class SpringBootCourseApplication {
                         s.getFirstName() + " borrowed " + book.getBookName());
             });
         });
+    }
+
+    private void deleteingProblem(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository){
+ //               studentRepository.deleteStudentById(1L);
+        //       studentIdCardRepository.deleteById(1L);
+    }
+
+    private void addingNewBook(StudentRepository studentRepository, BookRepository bookRepository){
+
+//        //1
+        Optional<Student> studentById = studentRepository.findStudentById(1L);
+        Student student = studentById.get();
+        student.addBook(new Book("Biblia", LocalDateTime.now()));
+        studentRepository.save(student);
+
+//        2
+//        Student student1 = studentRepository.findStudentById(1L).get();
+//        bookRepository.save(
+//                new Book(
+//                        "Biblia",
+//                        LocalDateTime.now(),
+//                        student1
+//                        )
+//
+//        );
+
     }
 }
