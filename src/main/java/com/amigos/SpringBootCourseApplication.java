@@ -41,57 +41,61 @@ public class SpringBootCourseApplication {
     }
 
     void generateRandomStudents(StudentRepository studentRepository) {
+
         Faker faker = new Faker();
         List<Student> studentL = new ArrayList<>();
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-        String email = String.format("%s.%s@amigoscode.edu", firstName, lastName);
-        Student student = new Student(
-                firstName,
-                lastName,
-                email,
-                faker.number().numberBetween(17, 55));
 
-        student.addBook(
-                new Book("Clean Code", LocalDateTime.now().minusDays(4)));
 
-        student.addBook(
-                new Book("Think and Grow Rich", LocalDateTime.now()));
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@amigoscode.edu", firstName, lastName);
+            Student student = new Student(
+                    firstName,
+                    lastName,
+                    email,
+                    faker.number().numberBetween(17, 55));
 
-        student.addBook(
-                new Book("Spring Data JPA", LocalDateTime.now().minusYears(1)));
+            student.addBook(
+                    new Book("Clean Code", LocalDateTime.now().minusDays(4)));
 
-        student.addEnrolment(
-                new Enrolment(
-                        new EnrolmentId(1L, 1L),
-                        student,
-                        new Course(
-                                "Spring Data JPA",
-                                "IT"
-                        ),
-                        LocalDateTime.now()
-                )
-        );
+            student.addBook(
+                    new Book("Think and Grow Rich", LocalDateTime.now()));
 
-        student.addEnrolment(
-                new Enrolment(
-                        new EnrolmentId(1L, 2L),
-                        student,
-                        new Course(
-                                "Many to many relationships",
-                                "IT"),
-                        LocalDateTime.now().minusDays(17)
-                )
-        );
+            student.addBook(
+                    new Book("Spring Data JPA", LocalDateTime.now().minusYears(1)));
 
-        StudentIdCard studentIdCard = new StudentIdCard(
-                "IdCard",
-                student);
+            student.addEnrolment(
+                    new Enrolment(
+                            new EnrolmentId(1L, 1L),
+                            student,
+                            new Course(
+                                    "Spring Data JPA",
+                                    "IT"
+                            ),
+                            LocalDateTime.now()
+                    )
+            );
 
-        student.setStudentIdCard(studentIdCard);
+            student.addEnrolment(
+                    new Enrolment(
+                            new EnrolmentId(1L,2L),
+                            student,
+                            new Course(
+                                    "Many to many relationships",
+                                    "IT"),
+                            LocalDateTime.now().minusDays(17)
+                    )
+            );
 
-        studentRepository.save(student);
-        studentL.add(student);
+            StudentIdCard studentIdCard = new StudentIdCard(
+                    "IdCard",
+                    student);
+
+            student.setStudentIdCard(studentIdCard);
+
+            studentRepository.save(student);
+            studentL.add(student);
+
 
         studentRepository.findStudentById(1L).ifPresent(s -> {
             System.out.println("fetch book lazy...");
