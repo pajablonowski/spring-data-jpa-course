@@ -1,7 +1,10 @@
 package com.amigos.services;
 
 import com.amigos.model.Student;
+import com.amigos.model.dto.BookDTO;
+import com.amigos.model.dto.CourseEnrolmentDTO;
 import com.amigos.model.dto.StudentDTO;
+import com.amigos.model.dto.StudentIdCardDTO;
 import com.amigos.repositories.StudentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,20 +29,26 @@ public class StudentService {
     }
 
     public List<StudentDTO> getAllStudents() {
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository.findAll());
+
+        return mapStudentListIntoStudentDTOList(studentRepository.findAll());
+
     }
 
 
     public List<StudentDTO> getAllStudentsAndSortByFirstName() {
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository.findAll(Sort.by(Sort.Direction.ASC, "firstName")));
+
+        return mapStudentListIntoStudentDTOList(studentRepository.findAll(Sort.by(Sort.Direction.ASC, "firstName")));
     }
 
     public List<StudentDTO> getAllStudentsAndSortByLastName() {
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository.findAll(Sort.by(Sort.Direction.ASC, "lastName")));
+
+        return mapStudentListIntoStudentDTOList(studentRepository.findAll(Sort.by(Sort.Direction.ASC, "lastName")));
+
     }
 
     public List<StudentDTO> getAllStudentsAndSortByLastNameAndFirstName() {
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository
+
+        return mapStudentListIntoStudentDTOList(studentRepository
                 .findAll(Sort.by("lastName").ascending()
                         .and(Sort.by("firstName").ascending())));
     }
@@ -50,20 +59,22 @@ public class StudentService {
                 5,
                 Sort.by("firstName").ascending());
         Page<Student> page = studentRepository.findAll(pageRequest);
-        return DTOService.mapStudentListIntoStudentDTOList(page.get().collect(Collectors.toList()));
+
+        return mapStudentListIntoStudentDTOList(page.get().collect(Collectors.toList()));
     }
 
 
-    public Optional<Student> findByEmail(String email) {
-        DTOService.mapStudentListIntoStudentDTOList(studentRepository
-                .findAll(Sort.by("lastName").ascending()
-                        .and(Sort.by("firstName").ascending())));
-        return studentRepository.findByEmail(email);
+    public Optional<StudentDTO> findByEmail(String email) {
+        Optional<Student> studentByEmail = studentRepository.findByEmail(email);
+        if (studentByEmail.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(mapStudentIntoStudentDTO(studentByEmail.get()));
     }
 
     public List<StudentDTO> findStudent(String firstName, Integer age) {
 
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(firstName, age));
+       return mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqual(firstName, age));
     }
 
     public Optional<StudentDTO> findByEmailJPQL(String email) {
@@ -71,11 +82,13 @@ public class StudentService {
         if (student.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(DTOService.mapStudentIntoStudentDTO(student.get()));
+
+
+        return Optional.of(mapStudentIntoStudentDTO(student.get()));
     }
 
     public List<StudentDTO> findStudentJPQL(String firstName, Integer age) {
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualJPQL(firstName, age));
+        return mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualJPQL(firstName, age));
     }
 
     public Optional<StudentDTO> findByEmailNativeQuerry(String email) {
@@ -83,12 +96,12 @@ public class StudentService {
         if (student.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(DTOService.mapStudentIntoStudentDTO(student.get()));
+        return Optional.of(mapStudentIntoStudentDTO(student.get()));
     }
 
     public List<StudentDTO> findStudentNativeQuerry(String firstName, Integer age) {
 
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualNativeQuerry(firstName, age));
+        return mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualNativeQuerry(firstName, age));
     }
 
     public Optional<StudentDTO> findByEmailNativeQuerryNamerParameter(String email) {
@@ -96,11 +109,11 @@ public class StudentService {
         if (student.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(DTOService.mapStudentIntoStudentDTO(student.get()));
+        return Optional.of(mapStudentIntoStudentDTO(student.get()));
     }
 
     public List<StudentDTO> findStudentNativeQuerryNamerParameter(String firstName, Integer age) {
-        return DTOService.mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualNativeQuerryNamedParameter(firstName, age));
+        return mapStudentListIntoStudentDTOList(studentRepository.findStudentByFirstNameEqualsAndAgeIsGreaterThanEqualNativeQuerryNamedParameter(firstName, age));
 
     }
 
@@ -108,4 +121,35 @@ public class StudentService {
         return studentRepository.deleteStudentById(id);
     }
 
+    private StudentDTO mapStudentIntoStudentDTO(Student student){
+        return new StudentDTO(
+                student.getId(),
+                student.getFirstName(),
+                student.getLastName(),
+                student.getEmail(),
+                student.getAge(),
+                new StudentIdCardDTO(
+                        student.getStudentIdCard().getId(),
+                        student.getStudentIdCard().getCardNumber()),
+                student.getBooks()
+                        .stream()
+                        .map(book -> new BookDTO(
+                                book.getId(),
+                                book.getBookName(),
+                                book.getCreatedAt())).toList(),
+                student.getEnrolments()
+                        .stream()
+                        .map(enrolment -> new CourseEnrolmentDTO(
+                                enrolment.getCourse().getId(),
+                                enrolment.getCourse().getName(),
+                                enrolment.getCourse().getDepartment(),
+                                enrolment.getCreatedAt()
+                        )).toList()
+        );
+    }
+    private List<StudentDTO> mapStudentListIntoStudentDTOList(List<Student> studentList){
+        List<StudentDTO> studentDTOList = new ArrayList<>();
+        studentList.forEach(student -> studentDTOList.add(mapStudentIntoStudentDTO(student)));
+        return studentDTOList;
+    }
 }

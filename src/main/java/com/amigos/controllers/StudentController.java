@@ -27,8 +27,8 @@ public class StudentController {
     }
 
     @GetMapping("/1")
-    public Student findStudentsByEmail() {
-        Optional<Student> student = studentService.findByEmail("aliva.shtisel@gmail.com");
+    public StudentDTO findStudentsByEmail() {
+        Optional<StudentDTO> student = studentService.findByEmail("aliva.shtisel@gmail.com");
         if (student.isEmpty()){
             throw new NoSuchElementException("Student with given email does not exist");
         }

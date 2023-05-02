@@ -17,11 +17,25 @@ public class BookService {
     }
 
     public List<BookDTO> getAllBooks(){
-        return DTOService.mapBookListIntoBookDTOList(bookRepository.findAll());
+
+        return bookRepository.findAll()
+                .stream()
+                .map(book -> new BookDTO(
+                        book.getId(),
+                        book.getBookName(),
+                        book.getCreatedAt())).toList();
+
     }
 
     public List<BookDTO> getFindBookByName(String bookName){
-        return DTOService.mapBookListIntoBookDTOList(bookRepository.findBookByName(bookName));
+
+        return bookRepository.findBookByName(bookName)
+                .stream()
+                .map(book -> new BookDTO(
+                        book.getId(),
+                        book.getBookName(),
+                        book.getCreatedAt())).toList();
+
     }
 
 
