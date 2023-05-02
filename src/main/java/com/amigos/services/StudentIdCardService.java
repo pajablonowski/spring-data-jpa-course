@@ -17,11 +17,22 @@ public class StudentIdCardService {
     }
 
     public List<StudentIdCardDTO> findAllStudentIdCard() {
-        return DTOService.mapStudentIdCardListIntoStudentIdCardDTOList(studentIdCardRepository.findAll());
+
+        return studentIdCardRepository.findAll()
+                .stream()
+                .map(studentIdCard -> new StudentIdCardDTO(
+                        studentIdCard.getId(),
+                        studentIdCard.getCardNumber())).toList();
+
     }
 
     public List<StudentIdCardDTO> findAllStudentsIdCardByCardNumber(String cardNumber){
-        return DTOService.mapStudentIdCardListIntoStudentIdCardDTOList(studentIdCardRepository.findAllStudentsIdCardByCardNumber(cardNumber));
+
+        return studentIdCardRepository.findAllStudentsIdCardByCardNumber(cardNumber)
+                .stream()
+                .map(studentIdCard -> new StudentIdCardDTO(
+                        studentIdCard.getId(),
+                        studentIdCard.getCardNumber())).toList();
     }
 
 }
