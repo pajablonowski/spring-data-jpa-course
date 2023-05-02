@@ -73,7 +73,7 @@ public class Student {
     @OneToMany(
             mappedBy = "student",
             orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
     private List<Book> books = new ArrayList<>();
